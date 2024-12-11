@@ -1,5 +1,5 @@
 from csv import *
-import rqst
+import requests as rqst
 import matplotlib.pyplot as graph
 
 def import_file_from_web(url, filename):
@@ -37,8 +37,8 @@ def import_data_on_python(filename):
 	return data
 
 
-import_file_from_web()
-casCovid = import_data_on_python()
+# import_file_from_web()
+# casCovid = import_data_on_python()
 
 #totalhp = 0
 #totalrea = 0
