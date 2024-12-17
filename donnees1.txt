@@ -7,9 +7,11 @@ données de laboratoires pour le dépistage : département, date, classe d'age, 
 csv,https://www.data.gouv.fr/fr/datasets/r/426bab53-e3f5-4c6a-9d54-dba4442b3dbc
 données espérance de vie 2020-2023 par sexe par département
 xlsx,https://data.drees.solidarites-sante.gouv.fr/api/datasets/1.0/601_indicateurs-de-contexte/attachments/c04_isd_esperance_de_vie_xlsx/
-
+taux de mortalité en 2023
 xlsx,https://data.drees.solidarites-sante.gouv.fr/api/datasets/1.0/601_indicateurs-de-contexte/attachments/c03_isd_taux_de_mortalite_xlsx/
+rapport interdécile des niveaux de vie (indicateur d'inégalités dans un département)
 xlsx,https://data.drees.solidarites-sante.gouv.fr/api/datasets/1.0/601_indicateurs-de-contexte/attachments/c10_isd_disparite_des_niveaux_de_vie_xlsx/
 xlsx,https://data.drees.solidarites-sante.gouv.fr/api/datasets/1.0/601_indicateurs-de-contexte/attachments/c08_isd_intensite_de_la_pauvrete_monetaire_xlsx/
 xlsx,https://data.drees.solidarites-sante.gouv.fr/api/datasets/1.0/601_indicateurs-de-contexte/attachments/c02_isd_indice_de_vieillissement_xlsx/
-xlsx,https://data.drees.solidarites-sante.gouv.fr/api/datasets/1.0/601_indicateurs-de-contexte/attachments/c01_isd_population_selon_age_xlsx/
+xlsx,https://data.drees.solidarites-sante.gouv.fr/
+api/datasets/1.0/601_indicateurs-de-contexte/attachments/c01_isd_population_selon_age_xlsx/
