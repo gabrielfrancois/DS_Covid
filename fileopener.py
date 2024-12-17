@@ -27,8 +27,11 @@ def import_data_on_python(filename):
 	Output :
 	data frame pandas
 	"""
-	return pd.read_csv(filename)
+	return pd.read_csv(filename, encoding="latin1")
 
+
+def import_data_excel_to_pandas(url):
+	pd.read_excel(url)
 
 
 
