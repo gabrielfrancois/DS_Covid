@@ -3,37 +3,44 @@ import requests as rqst
 import matplotlib.pyplot as graph
 import pandas as pd
 
-def import_file_from_web(url, filename):
+def import_data_csv_to_pandas(url):
 	"""
-	Inputs :
+	Input :
 	url (string) : url exact de la base de données
-	filename (string) : nom du fichier contenant les données.
 	
 	Output :
-	Void
+	df (dataframe pandas) :  tableau pandas contenant la base de données
 	"""
-	req = rqst.get(url)
-	url_content = req.content #On importe les données du lien de téléchargement du fichier csv
-	csv_file = open(filename, 'wb') #On ouvre un nouveau fichier csv où on recopie toutes les données
-	csv_file.write(url_content)
-	csv_file.close()
-
-
-def import_data_on_python(filename):
-	"""
-	Inputs :
-	filename (string) : nom du fichier contenant les données.
-	
-	Output :
-	data frame pandas
-	"""
-	return pd.read_csv(filename, encoding="latin1")
+	df = pd.read_csv(url, encoding="latin1")
+	return df
 
 
 def import_data_excel_to_pandas(url):
-	return pd.read_excel(url)
+	"""
+	Input :
+	url (string) : url exact de la base de données
+	
+	Output :
+	df (dataframe pandas) :  tableau pandas contenant la base de données
+	"""
+	df = pd.read_excel(url)
+	return df
 
+def dataframe_creator(file):
+	"""
+	Input : 
+	file (string) : nom du fichier contenant la liste des liens de téléchargement des bases de données requises pour le projet
+					Les lignes sont de la forme "format,lien".
+	
+	Output :
+	dataframe_list (dataframe pandas list) : liste de tableau pandas correspondant à chaque base de données
+	"""
+	reader1 = reader(file, delimiter = ",")
+	dataframe_list = []
+	for ligne in reader1:
+		if ligne[0] == "csv":
+			dataframe_list.append(import_data_csv_to_pandas(ligne[1]))
+		elif ligne[0] == "xlsx":
+			dataframe_list.append(import_data_excel_to_pandas(ligne[1]))
+	return dataframe_list
 
-
-# import_file_from_web()
-# casCovid = import_data_on_python()
