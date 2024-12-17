@@ -30,7 +30,7 @@ def dataframe_creator(file):
 	"""
 	Input : 
 	file (string) : nom du fichier contenant la liste des liens de téléchargement des bases de données requises pour le projet
-					Les lignes sont de la forme "format,lien"
+					Les lignes sont de la forme "format,lien".
 	
 	Output :
 	dataframe_list (dataframe pandas list) : liste de tableau pandas correspondant à chaque base de données
