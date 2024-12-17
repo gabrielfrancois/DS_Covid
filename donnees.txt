@@ -7,3 +7,4 @@ xlsx,https://data.drees.solidarites-sante.gouv.fr/api/datasets/1.0/601_indicateu
 xlsx,https://data.drees.solidarites-sante.gouv.fr/api/datasets/1.0/601_indicateurs-de-contexte/attachments/c08_isd_intensite_de_la_pauvrete_monetaire_xlsx/
 xlsx,https://data.drees.solidarites-sante.gouv.fr/api/datasets/1.0/601_indicateurs-de-contexte/attachments/c02_isd_indice_de_vieillissement_xlsx/
 xlsx,https://data.drees.solidarites-sante.gouv.fr/api/datasets/1.0/601_indicateurs-de-contexte/attachments/c01_isd_population_selon_age_xlsx/
+xlsx,https://www.data.gouv.fr/fr/datasets/r/98f3161f-79ff-4f16-8f6a-6d571a80fea2
