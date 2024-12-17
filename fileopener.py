@@ -3,7 +3,7 @@ import requests as rqst
 import matplotlib.pyplot as graph
 import pandas as pd
 
-def import_data_csv_to_pandas(filename):
+def import_data_csv_to_pandas(url):
 	"""
 	Inputs :
 	url (string) : url exact de la base de données
