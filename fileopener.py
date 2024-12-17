@@ -1,6 +1,7 @@
 from csv import *
 import requests as rqst
 import matplotlib.pyplot as graph
+import pandas as pd
 
 def import_file_from_web(url, filename):
 	"""
@@ -24,17 +25,11 @@ def import_data_on_python(filename):
 	filename (string) : nom du fichier contenant les données.
 	
 	Output :
-	data (list) : liste contenant les données du fichier
+	data frame pandas
 	"""
-	fichier = open(filename, "r") #On ouvre ce nouveau fichier csv pour importer ces données sur Python dans une liste
-	data = []
-	try:
-	    reader1 = reader(fichier, delimiter = ";")
-	    for ligne in reader1 :
-		    data.append(ligne)
-	finally:
-	    fichier.close
-	return data
+	return pd.read_csv(filename)
+
+
 
 
 # import_file_from_web()
