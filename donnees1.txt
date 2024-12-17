@@ -15,3 +15,5 @@ xlsx,https://data.drees.solidarites-sante.gouv.fr/api/datasets/1.0/601_indicateu
 xlsx,https://data.drees.solidarites-sante.gouv.fr/api/datasets/1.0/601_indicateurs-de-contexte/attachments/c02_isd_indice_de_vieillissement_xlsx/
 xlsx,https://data.drees.solidarites-sante.gouv.fr/
 api/datasets/1.0/601_indicateurs-de-contexte/attachments/c01_isd_population_selon_age_xlsx/
+
+https://www.data.gouv.fr/fr/datasets/r/2ce43ade-8d2c-4d1d-81da-ca06c82abc68
