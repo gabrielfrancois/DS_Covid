@@ -31,9 +31,9 @@ def import_data_on_python(filename):
 
 
 def import_data_excel_to_pandas(url):
-	pd.read_excel(url)
+	return pd.read_excel(url)
 
 
 
-import_file_from_web()
-casCovid = import_data_on_python()
+# import_file_from_web()
+# casCovid = import_data_on_python()
