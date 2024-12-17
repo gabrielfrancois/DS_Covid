@@ -1,10 +1,11 @@
 csv,https://www.data.gouv.fr/fr/datasets/r/6fadff46-9efd-4c53-942a-54aca783c30c
 csv,https://www.data.gouv.fr/fr/datasets/r/eceb9fb4-3ebc-4da3-828d-f5939712600a
 csv,https://www.data.gouv.fr/fr/datasets/r/426bab53-e3f5-4c6a-9d54-dba4442b3dbc
+csv,https://www.data.gouv.fr/fr/datasets/r/2ce43ade-8d2c-4d1d-81da-ca06c82abc68
+
 xlsx,https://data.drees.solidarites-sante.gouv.fr/api/datasets/1.0/601_indicateurs-de-contexte/attachments/c04_isd_esperance_de_vie_xlsx/
 xlsx,https://data.drees.solidarites-sante.gouv.fr/api/datasets/1.0/601_indicateurs-de-contexte/attachments/c03_isd_taux_de_mortalite_xlsx/
 xlsx,https://data.drees.solidarites-sante.gouv.fr/api/datasets/1.0/601_indicateurs-de-contexte/attachments/c10_isd_disparite_des_niveaux_de_vie_xlsx/
 xlsx,https://data.drees.solidarites-sante.gouv.fr/api/datasets/1.0/601_indicateurs-de-contexte/attachments/c08_isd_intensite_de_la_pauvrete_monetaire_xlsx/
 xlsx,https://data.drees.solidarites-sante.gouv.fr/api/datasets/1.0/601_indicateurs-de-contexte/attachments/c02_isd_indice_de_vieillissement_xlsx/
 xlsx,https://data.drees.solidarites-sante.gouv.fr/api/datasets/1.0/601_indicateurs-de-contexte/attachments/c01_isd_population_selon_age_xlsx/
-xlsx,https://www.data.gouv.fr/fr/datasets/r/98f3161f-79ff-4f16-8f6a-6d571a80fea2
