@@ -1,5 +1,5 @@
 <<<<<<< HEAD
-données hospitalières : département, nb quotidient de personnes nouvellement hospitalisées, nouvelles admissions en réanim et nouvellement décédés
+données hospitalières : département, nb quotidien de personnes nouvellement hospitalisées, nouvelles admissions en réanim et nouvellement décédés
 =======
 données hospitalières : région, nombre de nouveaux patients admis en réanimation dans les 24 dernières heures
 >>>>>>> eb23b45f2b9aacbb7545c06fbbd4c8e6a150fec7
