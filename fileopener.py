@@ -36,15 +36,18 @@ def dataframe_creator(filename):
 	dataframe_list (dataframe pandas list) : liste de tableau pandas correspondant à chaque base de données
 	"""
 	file = open(filename, "r")
-	reader1 = reader(file, delimiter = ",")
 	dataframe_list = []
-	for ligne in reader1:
-		print(ligne)
-		if ligne[0] == "csv":
-			print("csv")
-			dataframe_list.append(import_data_csv_to_pandas(ligne[1]))
-		elif ligne[0] == "xlsx":
-			dataframe_list.append(import_data_excel_to_pandas(ligne[1]))
+	try:
+		reader1 = reader(file, delimiter = ",")
+		for ligne in reader1:
+			print(ligne)
+			if ligne[0] == "csv":
+				print("csv")
+				dataframe_list.append(import_data_csv_to_pandas(ligne[1]))
+			elif ligne[0] == "xlsx":
+				dataframe_list.append(import_data_excel_to_pandas(ligne[1]))
+	finally:
+    	file.close
 	return dataframe_list
 
 
