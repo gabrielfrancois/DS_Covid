@@ -26,21 +26,29 @@ def import_data_excel_to_pandas(url):
 	df = pd.read_excel(url)
 	return df
 
-def dataframe_creator(file):
+def dataframe_creator(filename):
 	"""
 	Input : 
-	file (string) : nom du fichier contenant la liste des liens de téléchargement des bases de données requises pour le projet
+	filename (string) : nom du fichier contenant la liste des liens de téléchargement des bases de données requises pour le projet
 					Les lignes sont de la forme "format,lien".
 	
 	Output :
 	dataframe_list (dataframe pandas list) : liste de tableau pandas correspondant à chaque base de données
 	"""
-	reader1 = reader(file, delimiter = ",")
+	file = open(filename, "r")
 	dataframe_list = []
-	for ligne in reader1:
-		if ligne[0] == "csv":
-			dataframe_list.append(import_data_csv_to_pandas(ligne[1]))
-		elif ligne[0] == "xlsx":
-			dataframe_list.append(import_data_excel_to_pandas(ligne[1]))
+	try:
+		reader1 = reader(file, delimiter = ",")
+		for ligne in reader1:
+			print(ligne)
+			if ligne[0] == "csv":
+				print("csv")
+				dataframe_list.append(import_data_csv_to_pandas(ligne[1]))
+			elif ligne[0] == "xlsx":
+				dataframe_list.append(import_data_excel_to_pandas(ligne[1]))
+	finally:
+    	file.close
 	return dataframe_list
+
+
 
