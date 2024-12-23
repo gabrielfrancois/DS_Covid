@@ -27,9 +27,7 @@ df_hosp = df_hosp.groupby(['dep','annee','mois']).sum()
 
 # Nettoyage de la base des urgences
 
-df_urgences = df_urgences[['dep',
-'date_de_passage','sursaud_cl_age_corona','nbre_pass_corona', 'nbre_pass_tot', 'nbre_pass_corona', 'nbre_pass_tot',
-'nbre_pass_corona', 'nbre_pass_tot']]
+df_urgences = df_urgences[['dep','date_de_passage','sursaud_cl_age_corona','nbre_pass_corona', 'nbre_pass_tot', 'nbre_pass_corona', 'nbre_pass_tot','nbre_pass_corona', 'nbre_pass_tot']]
 #on remplit les valeurs non renseignées par 0 
 df_urgences.fillna(0)
 df_urgences["dep"] = df_urgences['dep'].astype(str)
@@ -51,7 +49,6 @@ A FAIRE
 
 # Nettoyage de la base de l'espérance de vie
 
-df_espvie = pd.read_excel(df_espvie, skiprows=5, header=[0])
 df_espvie = df_espvie.rename(
     columns= {"Unnamed: 0": "num_dep", "Unnamed: 1" : "nom_dep", "Hommes" : "esp_de_vie_homme_naissance", 
     "Femmes" : "esp_de_vie_femme_naissance",
