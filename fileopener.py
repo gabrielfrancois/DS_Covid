@@ -64,7 +64,7 @@ def dataframe_creator(filename):
     print(len(reader1))
 	for ligne in reader1:
 		if ligne[1] == "https://www.data.gouv.fr/fr/datasets/r/2ce43ade-8d2c-4d1d-81da-ca06c82abc68":
-			pass
+			dataframe_list.append(dataframe_etablissement(ligne[1]))
 		elif ligne[0] == "csv":
 			dataframe_list.append(import_data_csv_to_pandas(ligne[1]))
 		elif ligne[0] == "xlsx0":
