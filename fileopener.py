@@ -11,43 +11,43 @@ def import_data_csv_to_pandas(url):
 	Output :
 	df (dataframe pandas) :  tableau pandas contenant la base de données
 	"""
-	df = pd.read_csv(url, delimiter = ";", encoding="utf-8")
+	df = pd.read_csv(url, delimiter = ";", encoding="utf-8", low_memory=False)
 	return df
 
 
 def dataframe_etablissement(url):
-    """
-    Input :
-    url : lien url de la base de données
+	"""
+	Input :
+	url : lien url de la base de données
 
-    Output :
-    df_etablissement (dataframe pandas) : tableau pandas de la base des établissements de santé
-    """
-    df_etablissement = pd.read_csv(url, delimiter = ";", encoding = "utf-8", skiprows = 1, header = None, low_memory = False)
-    return(df_etablissement)
+	Output :
+	df_etablissement (dataframe pandas) : tableau pandas de la base des établissements de santé
+	"""
+	df_etablissement = pd.read_csv(url, delimiter = ";", encoding = "utf-8", skiprows = 1, header = None, low_memory = False)
+	return(df_etablissement)
 
 def dataframe_xlsx_format0(url):
-    """
-    Input :
-    url : lien url de la base de données
+	"""
+	Input :
+	url : lien url de la base de données
 
-    Output :
-    df (dataframe pandas) : tableau pandas de la base de données données en entrée
-    """
-    df = pd.read_excel(url, skiprows=4, header=[1])
-    return(df)
+	Output :
+	df (dataframe pandas) : tableau pandas de la base de données données en entrée
+	"""
+	df = pd.read_excel(url, skiprows=4, header=[1])
+	return(df)
 
 def dataframe_xlsx_format1(url):
-    """
-    Input :
-    url : lien url de la base de données
+	"""
+	Input :
+	url : lien url de la base de données
 
-    Output :
-    df_pauv (dataframe pandas) : tableau pandas de la base de données données en entrée
-    """
-    df = pd.read_excel(url, skiprows=5, header=[0])
-    return(df)
-    
+	Output :
+	df_pauv (dataframe pandas) : tableau pandas de la base de données données en entrée
+	"""
+	df = pd.read_excel(url, skiprows=5, header=[0])
+	return(df)
+	
 
 def dataframe_creator(filename):
 	"""
@@ -61,20 +61,15 @@ def dataframe_creator(filename):
 	file = open(filename, "r")
 	dataframe_list = []
 	reader1 = reader(file, delimiter = ",")
-    print(len(reader1))
 	for ligne in reader1:
 		if ligne[1] == "https://www.data.gouv.fr/fr/datasets/r/2ce43ade-8d2c-4d1d-81da-ca06c82abc68":
-            print("etab")
-			dataframe_list.append(dataframe_etablissement(ligne[1]))
+			dataframe_list.append(pd.read_csv(ligne[1], delimiter = ";", encoding = "utf-8", skiprows = 1, header = None, low_memory = False))
 		elif ligne[0] == "csv":
-            print("csv")
 			dataframe_list.append(import_data_csv_to_pandas(ligne[1]))
 		elif ligne[0] == "xlsx0":
-            print("0")
-            dataframe_list.append(dataframe_xlsx_format0(ligne[1]))
+			dataframe_list.append(dataframe_xlsx_format0(ligne[1]))
 		elif ligne[0] == "xlsx1":
-            print("1")
-            dataframe_list.append(dataframe_xlsx_format1(ligne[1]))
+			dataframe_list.append(dataframe_xlsx_format1(ligne[1]))
 	return dataframe_list
 
 
