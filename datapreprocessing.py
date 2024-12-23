@@ -4,6 +4,10 @@ from fileopener import dataframe_creator, dataframe_etablissement
 # import des dataframe grâce au fileopener
 file = "donnees.txt"
 df_list = dataframe_creator(file)
+<<<<<<<<< Temporary merge branch 1
+=========
+print(df_list)
+>>>>>>>>> Temporary merge branch 2
 # ordre des df : hospitalisations, urgences, dépistages, etablissements, espérance de vie, taux de mortalité, niveaux de vie, pauvreté monétaire, vieillissement, population selon age
 df_hosp = df_list[0]
 df_urgences = df_list[1]
