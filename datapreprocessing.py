@@ -22,6 +22,7 @@ df_hosp.rename(columns = {'incid_hosp':'nb hospitalisations','incid_rea':'nb rea
 df_hosp["dep"] = df_hosp["dep"].astype(str)
 df_hosp["mois"] = df_hosp["jour"].astype(str).str[5:7]
 df_hosp["annee"] = df_hosp["jour"].astype(str).str[:4]
+
 #on regroupe par département par mois de l'année
 df_hosp = df_hosp.groupby(['dep','annee','mois']).sum()
 
@@ -37,8 +38,35 @@ df_urgences = df_urgences.groupby(['dep','annee','mois','sursaud_cl_age_corona']
 
 # Nettoyage de la base des dépistages
 
+#on se débarrasse des colonnes inutiles et qu'on doit recalculer
+df_depistage = df_depistage.drop(columns=['cl_age90',"Ti","Tp","Td"])
+df_depistage = df_depistage.rename(columns = {'pop':'population','P':'nb patients positifs',
+'T':'nb patients testes'})
+
+#conversion des valeurs afin de pouvoir faire des calculs
+df_depistage["population"] = df_depistage["population"].str.replace(',','.').astype(float)
+df_depistage["nb patients positifs"] = df_depistage["nb patients positifs"].str.replace(',','.').astype(float)
+df_depistage["nb patients testes"] = df_depistage["nb patients testes"].str.replace(',','.').astype(float)
+
+df_depistage["dep"] = df_depistage['dep'].astype(str)
+df_depistage["mois"] = df_depistage["jour"].astype(str).str[5:7]
+df_depistage["annee"] = df_depistage["jour"].astype(str).str[:4]
+
+#création d'une id pour pouvoir regrouper par département/mois/année
+df_depistage["id"] = df_depistage["dep"] + "_" + df_depistage["annee"] + "_" + df_depistage["mois"]
+
+df_depistage = df_depistage.groupby("id").agg({"dep":"first","mois":"first","annee":"first","population":"mean","nb patients positifs":"sum",
+"nb patients testes":"sum"})
+
+#définition de taux en pourcentage
+df_depistage['taux de positivite'] = df_depistage['nb patients positifs']*100/df_depistage['nb patients testes']
+df_depistage['taux de depistage'] = df_depistage['nb patients testes']*100/df_depistage['population']
+df_depistage["taux d'incidence"] = df_depistage['nb patients positifs']*100/df_depistage['population']
+
+
 """
-A FAIRE
+#on remet les départements comme index de la df
+df_test = df_depistage.set_index("dep")
 """
 
 # Nettoyage de la base des établissements
