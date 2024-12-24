@@ -154,6 +154,9 @@ df_pop.drop(row_to_drop, inplace=True)
 df_pop.drop(columns="Unnamed: 17", inplace=True)
 
 
+#Nettoyage 
+
+
 
 """
 CODE DE LIANTSOA :

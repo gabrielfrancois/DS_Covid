@@ -2,11 +2,16 @@ from csv import *
 import requests as rqst
 import matplotlib.pyplot as graph
 import pandas as pd
+import numpy as np
+import requests
+import zipfile
+import io
+
 
 def import_data_csv_to_pandas(url):
 	"""
 	Input :
-	url (string) : url exact de la base de données
+	url (str) : url exact de la base de données
 	
 	Output :
 	df (dataframe pandas) :  tableau pandas contenant la base de données
@@ -18,7 +23,7 @@ def import_data_csv_to_pandas(url):
 def dataframe_etablissement(url):
 	"""
 	Input :
-	url : lien url de la base de données
+	url (str) : lien url de la base de données
 
 	Output :
 	df_etablissement (dataframe pandas) : tableau pandas de la base des établissements de santé
@@ -29,7 +34,7 @@ def dataframe_etablissement(url):
 def dataframe_xlsx_format0(url):
 	"""
 	Input :
-	url : lien url de la base de données
+	url (str) : lien url de la base de données
 
 	Output :
 	df (dataframe pandas) : tableau pandas de la base de données données en entrée
@@ -40,13 +45,46 @@ def dataframe_xlsx_format0(url):
 def dataframe_xlsx_format1(url):
 	"""
 	Input :
-	url : lien url de la base de données
+	url (str) : lien url de la base de données
 
 	Output :
 	df_pauv (dataframe pandas) : tableau pandas de la base de données données en entrée
 	"""
 	df = pd.read_excel(url, skiprows=5, header=[0])
 	return(df)
+
+def dataframezip(url):
+	"""
+	Input :
+	url (str) : lien url de téléchargement du zip contenant les bases de données des décès en France entre 2018 et 2023 inclus
+
+	Output:
+	final_df (dataframe pandas) : tableau pandas final contenant les multiples bases de données concaténées
+	"""
+
+	# Télécharger le fichier ZIP
+	response = requests.get(zip_url)
+	final_df = pd.Dataframe()
+	if response.status_code == 200:
+		# Charger le contenu du ZIP en mémoire
+		zip_file = zipfile.ZipFile(io.BytesIO(response.content))
+
+		# Liste des fichiers CSV dans l'archive
+		csv_files = [name for name in zip_file.namelist() if name.endswith('.csv')]
+
+		# Lire chaque fichier CSV directement en DataFrame
+		dataframes = []
+		for csv_file in csv_files:
+			if csv_file != "metadonnees_deces_ficdet.csv" and csv_file != "DC_2018_det.csv":
+				with zip_file.open(csv_file) as file:  # Ouvrir le fichier CSV dans le ZIP
+					df = pd.read_csv(file, delimiter = ";")  # Lire le CSV dans un DataFrame
+					dataframes.append(df)
+
+		# Combiner tous les DataFrames
+		final_df = pd.concat(dataframes)
+	else:
+		raise Exception(f"Échec du téléchargement : Code HTTP {response.status_code}")	
+	return final_df
 	
 
 def dataframe_creator(filename):

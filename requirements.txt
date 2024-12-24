@@ -4,4 +4,8 @@ openpyxl
 matplotlib
 csv
 scikit-learn
+numpy
+zipfile
+io
+
 
