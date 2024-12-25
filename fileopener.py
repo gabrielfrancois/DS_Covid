@@ -53,7 +53,7 @@ def dataframe_xlsx_format1(url):
 	df = pd.read_excel(url, skiprows=5, header=[0])
 	return(df)
 
-def dataframezip(url):
+def dataframe_zip(url):
 	"""
 	Input :
 	url (str) : lien url de téléchargement du zip contenant les bases de données des décès en France entre 2018 et 2023 inclus
@@ -63,7 +63,7 @@ def dataframezip(url):
 	"""
 
 	# Télécharger le fichier ZIP
-	response = requests.get(zip_url)
+	response = requests.get(url)
 	final_df = pd.Dataframe()
 	if response.status_code == 200:
 		# Charger le contenu du ZIP en mémoire
@@ -108,6 +108,8 @@ def dataframe_creator(filename):
 			dataframe_list.append(dataframe_xlsx_format0(ligne[1]))
 		elif ligne[0] == "xlsx1":
 			dataframe_list.append(dataframe_xlsx_format1(ligne[1]))
+		elif ligne[0] == "zip":
+			dataframe_list.append(dataframe_zip(ligne[1]))
 	return dataframe_list
 
 

@@ -4,17 +4,17 @@ from fileopener import *
 # import des dataframe grâce au fileopener
 file = "donnees.txt"
 df_list = dataframe_creator(file)
-# ordre des df : hospitalisations, urgences, dépistages, etablissements, espérance de vie, taux de mortalité, niveaux de vie, pauvreté monétaire, vieillissement, population selon age
+# ordre des df : hospitalisations, urgences, dépistages, etablissements, espérance de vie, niveaux de vie, pauvreté monétaire, vieillissement, population selon age
 df_hosp = df_list[0]
 df_urgences = df_list[1]
 df_depistage = df_list[2]
 df_etab = df_list[3]
 df_espvie = df_list[4]
-df_txmort = df_list[5]
-df_nvvie = df_list[6]
-df_pauv = df_list[7]
-df_vieil = df_list[8]
-df_pop = df_list[9]
+df_nvvie = df_list[5]
+df_pauv = df_list[6]
+df_vieil = df_list[7]
+df_pop = df_list[8]
+df_deces = df_list[9]
 
 # Nettoyage de la base des hospitalisations
 
@@ -93,11 +93,6 @@ df_espvie.drop(df_espvie.index[row_to_drop ::], inplace=True)
 row_to_drop = df_espvie.loc[(df_espvie["num_dep"]=="P")|(df_espvie["num_dep"]=="M")].index
 df_espvie.drop(row_to_drop, inplace=True)
 
-# Nettoyage de la base des taux de mortalité
-
-"""
-A FAIRE
-"""
 
 # Nettoyage de la base des niveaux de vie
 
@@ -154,8 +149,25 @@ df_pop.drop(row_to_drop, inplace=True)
 df_pop.drop(columns="Unnamed: 17", inplace=True)
 
 
-#Nettoyage 
+#Nettoyage de la base des décès
 
+
+df_deces.drop(["JDEC", "COMDEC", "ANAIS", "MNAIS", "JNAIS", "COMDOM", "LIEUDEC2"], axis = 1)
+df_deces.sort_values(by=["DEPDEC", "ADEC", "MDEC"], inplace = True)
+
+# Convertir la colonne 'SEXE' pour rendre les valeurs plus explicites
+# 1 pour homme, 2 pour femme (basé sur la convention INSEE en général)
+df_deces['SEXE'] = df['SEXE'].map({"M": 'homme', "F": 'femme'})
+result = (
+    df_deces.groupby(['DEPDEC', 'ADEC', 'MDEC', 'SEXE'])
+    .size()  # Compter le nombre d'occurrences
+    .unstack(fill_value=0)  # Créer des colonnes pour 'homme' et 'femme'
+    .reset_index()  # Remettre les index à plat
+    .rename(columns={'homme': 'mort_homme', 'femme': 'mort_femme'})  # Renommer les colonnes
+)
+
+result.index = result["DEPDEC"]
+df_deces = result.drop("DEPDEC", axis = 1)
 
 
 """
