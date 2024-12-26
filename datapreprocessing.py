@@ -1,5 +1,12 @@
 import pandas as pd
-from fileopener import *
+from csv import *
+import requests as rqst
+import numpy as np
+import requests
+import zipfile
+import io
+import warnings
+warnings.filterwarnings("ignore")
 
 # import des dataframe grâce au fileopener
 file = "donnees.txt"
@@ -29,7 +36,7 @@ df_hosp = df_hosp.groupby(['dep','annee','mois']).sum()
 # Nettoyage de la base des urgences
 
 df_urgences = df_urgences[['dep','date_de_passage','sursaud_cl_age_corona','nbre_pass_corona', 'nbre_pass_tot', 'nbre_pass_corona', 'nbre_pass_tot','nbre_pass_corona', 'nbre_pass_tot']]
-#on remplit les valeurs non renseignées par 0 
+#on remplit les valeurs non renseignées par 0
 df_urgences.fillna(0)
 df_urgences["dep"] = df_urgences['dep'].astype(str)
 df_urgences["mois"] = df_urgences["date_de_passage"].astype(str).str[5:7]
@@ -71,16 +78,38 @@ df_test = df_depistage.set_index("dep")
 
 # Nettoyage de la base des établissements
 
-"""
-A FAIRE
-"""
+"""on fait en sorte d'avoir des noms pour chaque colonnes pour pouvoir travailler sur le dataFrame"""
+names_columns = ["finess", "etalab"]+[str(x) for x in range(30)]
+
+df_etab.columns = names_columns
+
+"""On sélectionne les colonnes intéressantes """
+df_etab = df_etab.loc[:,["11","12","17","23",]]
+
+df_etab.rename(columns={"11" : "num_dep", "12" : "nom_dep", "17" : "type_centre", "23" : "statut_centre"}, inplace=True)
+
+"""On souhaite sélectionner les lieux pouvant avoir un lien avec la guérison/dépistage du covid uniquement"""
+word_covid = ["hospi", "pharma", "maison de santé", "Laboratoire d'Analyses"]
+df_etab["etat_soin_covid"] = df_etab["type_centre"].str.contains(pat="|".join(word_covid), case=False, na=False).astype(int)
+
+df_etab.loc[df_etab["etat_soin_covid"]==1]["type_centre"].unique()
+
+
+"""Certaines cathégories d'établissement se sont glissée dans notre large sélection, on les retire donc"""
+line_to_drop = (["Centre Hospitalier Spécialisé lutte Maladies Mentales", "Maison de Santé pour Maladies Mentales",
+"Laboratoire pharmaceutique préparant délivrant allergènes", "Syndicat Inter Hospitalier (S.I.H.)"]
+    )
+df_etab.loc[df_etab["type_centre"].isin(line_to_drop),"etat_soin_covid"] = 0
+
+df_etab = df_etab.groupby(["nom_dep", "num_dep"])["etat_soin_covid"].sum().reset_index()
+df_etab.sort_values(by = "etat_soin_covid",ascending=False)
 
 # Nettoyage de la base de l'espérance de vie
 
 df_espvie = df_espvie.rename(
-    columns= {"Unnamed: 0": "num_dep", "Unnamed: 1" : "nom_dep", "Hommes" : "esp_de_vie_homme_naissance", 
+    columns= {"Unnamed: 0": "num_dep", "Unnamed: 1" : "nom_dep", "Hommes" : "esp_de_vie_homme_naissance",
     "Femmes" : "esp_de_vie_femme_naissance",
-    "Hommes.1" : "esp_de_vie_homme_a_60", 
+    "Hommes.1" : "esp_de_vie_homme_a_60",
     "Femmes.1": "esp_de_vie_femme_a_60",
     "Hommes.2" : "esp_de_vie_homme_a_65",
     "Femmes.2" : "esp_de_vie_femme_a_65"}
@@ -131,8 +160,9 @@ for col in df_vieil.select_dtypes(["int64", "float64"]).columns :
 #Et on supprime les données pour toute la France métropolitaine et toute la France métropolitaine hors IdF
 row_to_drop = df_vieil.loc[df_vieil["nom_dep"]=="France métropolitaine et DROM (hors Mayotte)"].index[0]
 df_vieil.drop(df_vieil.index[row_to_drop ::], inplace=True)
-row_to_drop = df_vieil.loc[(df_vieil["num_dep"]=="P")|(df_vieil["num_dep"]=="M")].index
+row_to_drop = df_vieil.loc[(df_vieil["num_dep"]=="P")|(df_vieil["num_dep"]=="M")|(df_vieil["num_dep"]=="69D")|(df_vieil["num_dep"]=="69M")].index
 df_vieil.drop(row_to_drop, inplace=True)
+df_vieil.drop(["nom_dep", "En 1999"], axis = 1, inplace = True)
 
 #Nettoyage de la base de la population selon l'age
 
@@ -157,7 +187,7 @@ df_deces.sort_values(by=["DEPDEC", "ADEC", "MDEC"], inplace = True)
 
 # Convertir la colonne 'SEXE' pour rendre les valeurs plus explicites
 # 1 pour homme, 2 pour femme (basé sur la convention INSEE en général)
-df_deces['SEXE'] = df['SEXE'].map({"M": 'homme', "F": 'femme'})
+df_deces['SEXE'] = df_deces['SEXE'].map({"M": 'homme', "F": 'femme'})
 result = (
     df_deces.groupby(['DEPDEC', 'ADEC', 'MDEC', 'SEXE'])
     .size()  # Compter le nombre d'occurrences
@@ -168,6 +198,7 @@ result = (
 
 result.index = result["DEPDEC"]
 df_deces = result.drop("DEPDEC", axis = 1)
+
 
 
 """
