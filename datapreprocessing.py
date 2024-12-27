@@ -35,6 +35,8 @@ df_hosp_temp = df_hosp.groupby("id").agg({"dep":"first","mois":"first","annee":"
  "nb deces":"sum", "nb retour au domicile":"sum"})
 df_hosp = df_hosp.groupby("dep").agg({"nb hospitalisations":"sum","nb reanimations":"sum",
  "nb deces":"sum", "nb retour au domicile":"sum"})
+df_hosp.index = df_hosp["dep"]
+df_hosp.drop(column = "dep", index = "978")
 
 #on retire les territoires d'outre-mer pour garder les départements
 tom_list = ['977','978','986','987','988','984','989']
@@ -228,6 +230,8 @@ row_to_drop = df_pop.loc[(df_pop["num_dep"]=="P")|(df_pop["num_dep"]=="M")].inde
 df_pop.drop(row_to_drop, inplace=True)
 df_pop.drop(columns="Unnamed: 17", inplace=True)
 
+"""
+Df_deces, mais inutile vu que données déjà dans df_hosp:
 
 #Nettoyage de la base des décès
 
@@ -248,6 +252,7 @@ result = (
 
 result.index = result["DEPDEC"]
 df_deces = result.drop("DEPDEC", axis = 1)
+"""
 
 
 
