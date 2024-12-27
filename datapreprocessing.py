@@ -25,7 +25,7 @@ df_deces = df_list[9]
 
 # Nettoyage de la base des hospitalisations
 
-df_host = df_hosp.rename(columns = {'incid_hosp':'nb hospitalisations','incid_rea':'nb reanimations','incid_dc':'nb deces','incid_rad':'nb retour au domicile'})
+df_hosp = df_hosp.rename(columns = {'incid_hosp':'nb hospitalisations','incid_rea':'nb reanimations','incid_dc':'nb deces','incid_rad':'nb retour au domicile'})
 df_hosp["dep"] = df_hosp["dep"].astype(str)
 df_hosp["mois"] = df_hosp["jour"].astype(str).str[5:7]
 df_hosp["annee"] = df_hosp["jour"].astype(str).str[:4]
@@ -33,6 +33,8 @@ df_hosp["annee"] = df_hosp["jour"].astype(str).str[:4]
 df_hosp["id"] = df_hosp["dep"] + "_" + df_hosp["annee"] + "_" + df_hosp["mois"] 
 df_hosp = df_hosp.groupby("id").agg({"dep":"first","mois":"first","annee":"first","nb hospitalisations":"sum","nb reanimations":"sum",
  "nb deces":"sum", "nb retour au domicile":"sum"})
+df_hosp.index = df_hosp["dep"]
+df_hosp.drop(column = "dep", index = "978")
 
 """
 #on remet les départements comme index de la df
@@ -196,6 +198,8 @@ row_to_drop = df_pop.loc[(df_pop["num_dep"]=="P")|(df_pop["num_dep"]=="M")].inde
 df_pop.drop(row_to_drop, inplace=True)
 df_pop.drop(columns="Unnamed: 17", inplace=True)
 
+"""
+Df_deces, mais inutile vu que données déjà dans df_hosp:
 
 #Nettoyage de la base des décès
 
@@ -216,6 +220,7 @@ result = (
 
 result.index = result["DEPDEC"]
 df_deces = result.drop("DEPDEC", axis = 1)
+"""
 
 
 
