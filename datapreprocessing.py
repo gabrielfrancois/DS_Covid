@@ -30,22 +30,29 @@ df_hosp["dep"] = df_hosp["dep"].astype(str)
 df_hosp["mois"] = df_hosp["jour"].astype(str).str[5:7]
 df_hosp["annee"] = df_hosp["jour"].astype(str).str[:4]
 
-df_temp["id"] = df_hosp["dep"] + "_" + df_hosp["annee"] + "_" + df_hosp["mois"] 
+"""
+verision si on garde temporalité
+df_hosp["id"] = df_hosp["dep"] + "_" + df_hosp["annee"] + "_" + df_hosp["mois"] 
 df_hosp_temp = df_hosp.groupby("id").agg({"dep":"first","mois":"first","annee":"first","nb hospitalisations":"sum","nb reanimations":"sum",
  "nb deces":"sum", "nb retour au domicile":"sum"})
+"""
+
 df_hosp = df_hosp.groupby("dep").agg({"nb hospitalisations":"sum","nb reanimations":"sum",
  "nb deces":"sum", "nb retour au domicile":"sum"})
 df_hosp.index = df_hosp["dep"]
 df_hosp.drop(column = "dep", index = "978")
 
+"""
 #on retire les territoires d'outre-mer pour garder les départements
 tom_list = ['977','978','986','987','988','984','989']
 df_hosp = df_hosp.drop(df_hosp[df_hosp["dep"].isin(tom_list)].index)
 df_hosp_temp = df_hosp_temp.drop(df_hosp_temp[df_hosp_temp["dep"].isin(tom_list)].index)
+"""
 
-
+"""
 #on remet les départements comme index de la df
 df_hosp = df_hosp.set_index("dep")
+"""
 
 """
 #on crée une dataframe remplie qui contient tous les départements, pour chaque mois et chaque année
@@ -85,14 +92,19 @@ df_urgences = df_urgences.groupby(['dep','annee','mois','sursaud_cl_age_corona']
 
 df_urgences["id"] = df_urgences["dep"] + "_" + df_urgences["annee"] + "_" + df_urgences["mois"] + "_" + df_urgences["sursaud_cl_age_corona"].astype(str)
 
-df_urgences = df_urgences.groupby("id").agg({"dep":"first","mois":"first","annee":"first",
+
+""""
+version si on garde temporalité et classes d'âge
+df_urgences_temp = df_urgences.groupby("id").agg({"dep":"first","mois":"first","annee":"first",
 "sursaud_cl_age_corona":"first","nbre_pass_corona":"sum","nbre_pass_tot":"sum",
 "nbre_hospit_corona":"sum","nbre_acte_corona":"sum","nbre_acte_tot":"sum"})
+"""
 
-"""
-#on remet les départements comme index de la df
-df_urgences = df_urgences.set_index("dep")
-"""
+
+df_urgences = df_urgences.groupby("dep").agg({"nbre_pass_corona":"sum","nbre_pass_tot":"sum",
+"nbre_hospit_corona":"sum","nbre_acte_corona":"sum","nbre_acte_tot":"sum"})
+
+
 
 
 # Nettoyage de la base des dépistages
@@ -114,14 +126,26 @@ df_depistage["annee"] = df_depistage["jour"].astype(str).str[:4]
 #création d'une id pour pouvoir regrouper par département/mois/année
 df_depistage["id"] = df_depistage["dep"] + "_" + df_depistage["annee"] + "_" + df_depistage["mois"]
 
-df_depistage = df_depistage.groupby("id").agg({"dep":"first","mois":"first","annee":"first","population":"mean","nb patients positifs":"sum",
+
+"""
+version si on garde temporalité
+
+df_depistage_temp = df_depistage.groupby("id").agg({"dep":"first","mois":"first","annee":"first","population":"mean","nb patients positifs":"sum",
 "nb patients testes":"sum"})
 
 #définition de taux en pourcentage
+df_depistage_temp['taux de positivite'] = df_depistage_temp['nb patients positifs']*100/df_depistage_temp['nb patients testes']
+df_depistage_temp['taux de depistage'] = df_depistage_temp['nb patients testes']*100/df_depistage_temp['population']
+df_depistage_temp["taux d'incidence"] = df_depistage_temp['nb patients positifs']*100/df_depistage_temp['population']
+"""
+
+#on somme toutes les valeurs
+df_depistage = df_depistage.groupby("dep").agg({"population":"mean","nb patients positifs":"sum",
+"nb patients testes":"sum"})
+
 df_depistage['taux de positivite'] = df_depistage['nb patients positifs']*100/df_depistage['nb patients testes']
 df_depistage['taux de depistage'] = df_depistage['nb patients testes']*100/df_depistage['population']
 df_depistage["taux d'incidence"] = df_depistage['nb patients positifs']*100/df_depistage['population']
-
 
 """
 #on remet les départements comme index de la df
