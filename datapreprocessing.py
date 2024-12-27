@@ -36,6 +36,32 @@ df_hosp = df_hosp.groupby("id").agg({"dep":"first","mois":"first","annee":"first
 df_hosp.index = df_hosp["dep"]
 df_hosp.drop(column = "dep", index = "978")
 
+#on retire les territoires d'outre-mer pour garder les départements
+tom_list = ['977','978','986','987','988','984','989']
+df_hosp = df_hosp.drop(df_hosp[df_hosp["dep"].isin(tom_list)].index)
+
+#on crée une dataframe remplie qui contient tous les départements, pour chaque mois et chaque année
+# avec les mêmes colonnes que df_hosp, elle est remplie de 0 car on suppose qu'il n'y a pas eu d'incident lié au covid
+#quand ce n'est pas renseigné
+
+dep_list = pd.unique(df_hosp["dep"])
+column_hosp = df_hosp.columns.to_list()
+index_list = []
+
+for dep in dep_list:
+    for annee in range(2019,2024):
+        for mois in range(1,13):
+            id = f'{dep}_{annee}_{mois:02d}'
+            index_list.append(id)
+
+df_hosp_fill = pd.DataFrame(0, index=index_list, columns=column_hosp)
+
+#on rassemble les deux dataframes pour avoir 6060 lignes
+
+df_hosp_final = pd.concat([df_hosp, df_hosp_fill], ignore_index=False)
+df_hosp_final = df_hosp_final.reset_index().drop_duplicates(subset="index", keep="first").set_index("index").sort_index()
+
+
 """
 #on remet les départements comme index de la df
 df_hosp = df_hosp.set_index("dep")
@@ -43,7 +69,8 @@ df_hosp = df_hosp.set_index("dep")
 
 # Nettoyage de la base des urgences
 
-df_urgences = df_urgences[['dep','date_de_passage','sursaud_cl_age_corona','nbre_pass_corona', 'nbre_pass_tot', 'nbre_pass_corona', 'nbre_pass_tot','nbre_pass_corona', 'nbre_pass_tot']]
+df_urgences = df_urgences[['dep','date_de_passage','sursaud_cl_age_corona','nbre_pass_corona', 'nbre_pass_tot',
+ "nbre_hospit_corona","nbre_acte_corona","nbre_acte_tot"]]
 #on remplit les valeurs non renseignées par 0
 df_urgences.fillna(0)
 df_urgences["dep"] = df_urgences['dep'].astype(str)
