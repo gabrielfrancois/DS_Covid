@@ -7,6 +7,7 @@ import zipfile
 import io
 import warnings
 warnings.filterwarnings("ignore")
+from fileopener import dataframe_creator
 
 # import des dataframe grâce au fileopener
 file = "donnees.txt"
@@ -276,6 +277,9 @@ df_final["esp_de_vie_F_65"] = df_espvie["esp_de_vie_femme_a_65"]
 df_final["rapport nv_vie interdécile D9/D1"] = df_nvvie["Rapport interdécile D9/D1"]
 df_final["indicateur pauvreté 1"] = df_pauv["Intensité de la pauvreté (1)"]
 df_final["indicateur pauvreté 2"] = df_pauv["Intensité de la pauvreté des bénéficiaires de minima sociaux (1) (2)"]
+df_final["patients positifs"] = df_depistage["nb patients positifs"]
+df_final["patients testés"] = df_depistage["nb patients testes"]
+
 
 
 
