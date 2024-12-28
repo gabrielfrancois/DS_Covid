@@ -279,7 +279,9 @@ df_final["indicateur pauvreté 1"] = df_pauv["Intensité de la pauvreté (1)"]
 df_final["indicateur pauvreté 2"] = df_pauv["Intensité de la pauvreté des bénéficiaires de minima sociaux (1) (2)"]
 df_final["patients positifs"] = df_depistage["nb patients positifs"]
 df_final["patients testés"] = df_depistage["nb patients testes"]
-
+df_final["taux d'incidence"] = df_final["patients positifs"]*100/df_final["pop_totale"]
+df_final["taux de positivité"] = df_final["patients positifs"]*100/df_final["patients testés"]
+df_final["taux de dépistage"] = df_final["patients testés"]*100/df_final["pop_totale"]
 
 
 
