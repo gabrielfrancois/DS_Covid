@@ -21,7 +21,6 @@ df_nvvie = df_list[5]
 df_pauv = df_list[6]
 df_vieil = df_list[7]
 df_pop = df_list[8]
-df_deces = df_list[9]
 
 # Nettoyage de la base des hospitalisations
 
@@ -32,15 +31,14 @@ df_hosp["annee"] = df_hosp["jour"].astype(str).str[:4]
 
 """
 verision si on garde temporalité
-df_hosp["id"] = df_hosp["dep"] + "_" + df_hosp["annee"] + "_" + df_hosp["mois"] 
+df_hosp["id"] = df_hosp["dep"] + "_" + df_hosp["annee"] + "_" + df_hosp["mois"]
 df_hosp_temp = df_hosp.groupby("id").agg({"dep":"first","mois":"first","annee":"first","nb hospitalisations":"sum","nb reanimations":"sum",
  "nb deces":"sum", "nb retour au domicile":"sum"})
 """
 
 df_hosp = df_hosp.groupby("dep").agg({"nb hospitalisations":"sum","nb reanimations":"sum",
  "nb deces":"sum", "nb retour au domicile":"sum"})
-df_hosp.index = df_hosp["dep"]
-df_hosp.drop(column = "dep", index = "978")
+df_hosp.drop(["971", "972", "973", "974", "976", "978"], inplace=True)
 
 """
 #on retire les territoires d'outre-mer pour garder les départements
@@ -88,9 +86,7 @@ df_urgences.fillna(0)
 df_urgences["dep"] = df_urgences['dep'].astype(str)
 df_urgences["mois"] = df_urgences["date_de_passage"].astype(str).str[5:7]
 df_urgences["annee"] = df_urgences["date_de_passage"].astype(str).str[:4]
-df_urgences = df_urgences.groupby(['dep','annee','mois','sursaud_cl_age_corona']).sum()
-
-df_urgences["id"] = df_urgences["dep"] + "_" + df_urgences["annee"] + "_" + df_urgences["mois"] + "_" + df_urgences["sursaud_cl_age_corona"].astype(str)
+df_urgences = df_urgences.groupby(['dep']).sum()
 
 
 """"
@@ -103,6 +99,8 @@ df_urgences_temp = df_urgences.groupby("id").agg({"dep":"first","mois":"first","
 
 df_urgences = df_urgences.groupby("dep").agg({"nbre_pass_corona":"sum","nbre_pass_tot":"sum",
 "nbre_hospit_corona":"sum","nbre_acte_corona":"sum","nbre_acte_tot":"sum"})
+df_urgences.drop(["971", "972", "973", "974", "976"], inplace = True)
+
 
 
 
@@ -147,6 +145,8 @@ df_depistage['taux de positivite'] = df_depistage['nb patients positifs']*100/df
 df_depistage['taux de depistage'] = df_depistage['nb patients testes']*100/df_depistage['population']
 df_depistage["taux d'incidence"] = df_depistage['nb patients positifs']*100/df_depistage['population']
 
+df_depistage.drop(["971", "972", "973", "974", "975", "976", "977", "978"], inplace = True)
+
 """
 #on remet les départements comme index de la df
 df_depistage = df_depistage.set_index("dep")
@@ -180,6 +180,9 @@ df_etab.loc[df_etab["type_centre"].isin(line_to_drop),"etat_soin_covid"] = 0
 df_etab = df_etab.groupby(["nom_dep", "num_dep"])["etat_soin_covid"].sum().reset_index()
 df_etab.sort_values(by = "etat_soin_covid",ascending=False)
 
+df_etab.sort_values(by = "num_dep")
+df_etab.index = df_etab["num_dep"]
+df_etab.drop(["9A", "9B", "9C", "9D", "9E", "9F", "9J"], inplace = True)
 # Nettoyage de la base de l'espérance de vie
 
 df_espvie = df_espvie.rename(
@@ -195,22 +198,23 @@ for col in df_espvie.select_dtypes(["int64", "float64"]).columns :
 #On enlève les dernières lignes qui sont inutiles
 row_to_drop = df_espvie.loc[df_espvie["num_dep"]=="FE"].index[0]
 df_espvie.drop(df_espvie.index[row_to_drop ::], inplace=True)
-row_to_drop = df_espvie.loc[(df_espvie["num_dep"]=="P")|(df_espvie["num_dep"]=="M")].index
+row_to_drop = df_espvie.loc[(df_espvie["num_dep"]=="P")|(df_espvie["num_dep"]=="M")|(df_espvie["num_dep"]==971)|(df_espvie["num_dep"]==972)|(df_espvie["num_dep"]==973)|(df_espvie["num_dep"]==974)|(df_espvie["num_dep"]==976)].index
 df_espvie.drop(row_to_drop, inplace=True)
+df_espvie.index = df_espvie["num_dep"].astype("str")
 
 
 # Nettoyage de la base des niveaux de vie
 
 df_nvvie = df_nvvie.rename(columns= {"Départements": "num_dep", "Unnamed: 1" : "nom_dep"})
-df_nvvie.dtypes
 #On remplace les colonnes de type int ou float manquantes par la médiane
 for col in df_nvvie.select_dtypes(["int64", "float64"]).columns :
     df_nvvie[col].fillna(df_nvvie[col].median(), inplace=True)
 #Et on supprime les données pour toute la France métropolitaine et toute la France métropolitaine hors IdF
 row_to_drop = df_nvvie.loc[df_nvvie["num_dep"]==974].index[0]
 df_nvvie.drop(df_nvvie.index[row_to_drop+1 ::], inplace=True)
-row_to_drop = df_nvvie.loc[(df_nvvie["num_dep"]=="P")|(df_nvvie["num_dep"]=="M")].index
+row_to_drop = df_nvvie.loc[(df_nvvie["num_dep"]=="P")|(df_nvvie["num_dep"]=="M")|(df_nvvie["num_dep"]==972)|(df_nvvie["num_dep"]==974)].index
 df_nvvie.drop(row_to_drop, inplace=True)
+df_nvvie.index = df_nvvie["num_dep"].astype("str")
 
 
 # Nettoyage de la base de pauvreté monétaire
@@ -222,8 +226,9 @@ for col in df_pauv.select_dtypes(["int64", "float64"]).columns :
 #Et on supprime les données pour toute la France métropolitaine et toute la France métropolitaine hors IdF
 row_to_drop = df_pauv.loc[df_pauv["num_dep"]==974].index[0]
 df_pauv.drop(df_pauv.index[row_to_drop+1 ::], inplace=True)
-row_to_drop = df_pauv.loc[(df_pauv["num_dep"]=="P")|(df_pauv["num_dep"]=="M")].index
+row_to_drop = df_pauv.loc[(df_pauv["num_dep"]=="P")|(df_pauv["num_dep"]=="M")|(df_pauv["num_dep"]==972)|(df_pauv["num_dep"]==974)].index
 df_pauv.drop(row_to_drop, inplace=True)
+df_pauv.index = df_pauv["num_dep"].astype("str")
 
 
 #Nettoyage de la base de vieillissement
@@ -236,13 +241,14 @@ for col in df_vieil.select_dtypes(["int64", "float64"]).columns :
 #Et on supprime les données pour toute la France métropolitaine et toute la France métropolitaine hors IdF
 row_to_drop = df_vieil.loc[df_vieil["nom_dep"]=="France métropolitaine et DROM (hors Mayotte)"].index[0]
 df_vieil.drop(df_vieil.index[row_to_drop ::], inplace=True)
-row_to_drop = df_vieil.loc[(df_vieil["num_dep"]=="P")|(df_vieil["num_dep"]=="M")|(df_vieil["num_dep"]=="69D")|(df_vieil["num_dep"]=="69M")].index
+row_to_drop = df_vieil.loc[(df_vieil["num_dep"]=="P")|(df_vieil["num_dep"]=="M")|(df_vieil["num_dep"]=="69D")|(df_vieil["num_dep"]=="69M")|(df_vieil["num_dep"]==970)|(df_vieil["num_dep"]==971)|(df_vieil["num_dep"]==972)|(df_vieil["num_dep"]==973)|(df_vieil["num_dep"]==974)|(df_vieil["num_dep"]==976)].index
 df_vieil.drop(row_to_drop, inplace=True)
 df_vieil.drop(["nom_dep", "En 1999"], axis = 1, inplace = True)
+df_vieil.index = df_vieil["num_dep"].astype("str")
 
 #Nettoyage de la base de la population selon l'age
 
-
+print(df_pop.columns)
 df_pop = df_pop.rename(columns = {"Unnamed: 0" : "num_dep", "Unnamed: 1" : "nom_dep", "Unnamed: 9" : "pop_totale"})
 #On remplace les valeurs manquantes par la médiane
 for col in df_pop.select_dtypes(["int64", "float64"]).columns :
@@ -250,9 +256,28 @@ for col in df_pop.select_dtypes(["int64", "float64"]).columns :
 #On observe qu'à partir de la ligne 106, ça n'a plus d'întérêt donc on supprime
 df_pop.drop(df_pop.index[105::], inplace=True)
 #Et on supprime les données pour toute la France métropolitaine et toute la France métropolitaine hors IdF
-row_to_drop = df_pop.loc[(df_pop["num_dep"]=="P")|(df_pop["num_dep"]=="M")].index
+row_to_drop = df_pop.loc[(df_pop["num_dep"]=="P")|(df_pop["num_dep"]=="M")|(df_pop["num_dep"]=="69D")|(df_pop["num_dep"]=="69M")|(df_pop["num_dep"]==971)|(df_pop["num_dep"]==972)|(df_pop["num_dep"]==973)|(df_pop["num_dep"]==974)|(df_pop["num_dep"]==976)].index
 df_pop.drop(row_to_drop, inplace=True)
 df_pop.drop(columns="Unnamed: 17", inplace=True)
+df_pop.index = df_pop["num_dep"]
+df_pop.drop(columns = "num_dep",inplace=True)
+
+
+df_final = df_pop
+df_final["nb hospitalisations"] = df_hosp["nb hospitalisations"]
+df_final["nb deces"] = df_hosp["nb deces"]
+df_final["espérance de vie"] = df_vieil["En 2021"]
+df_final["passage_urg_corona"] = df_urgences["nbre_pass_corona"]
+df_final["nb_etab_sante"] = df_etab["etat_soin_covid"]
+df_final["esp_de_vie_H_60"] = df_espvie["esp_de_vie_homme_a_60"]
+df_final["esp_de_vie_F_60"] = df_espvie["esp_de_vie_femme_a_60"]
+df_final["esp_de_vie_H_65"] = df_espvie["esp_de_vie_homme_a_65"]
+df_final["esp_de_vie_F_65"] = df_espvie["esp_de_vie_femme_a_65"]
+df_final["rapport nv_vie interdécile D9/D1"] = df_nvvie["Rapport interdécile D9/D1"]
+df_final["indicateur pauvreté 1"] = df_pauv["Intensité de la pauvreté (1)"]
+df_final["indicateur pauvreté 2"] = df_pauv["Intensité de la pauvreté des bénéficiaires de minima sociaux (1) (2)"]
+
+
 
 """
 Df_deces, mais inutile vu que données déjà dans df_hosp:
