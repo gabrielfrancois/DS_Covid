@@ -1,10 +1,9 @@
 pandas
 requests
 openpyxl
+et-xmlfile
 matplotlib
 scikit-learn
 numpy
-zipfile
-io
 
 
