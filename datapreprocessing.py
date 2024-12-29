@@ -249,7 +249,6 @@ df_vieil.index = df_vieil["num_dep"].astype("str")
 
 #Nettoyage de la base de la population selon l'age
 
-print(df_pop.columns)
 df_pop = df_pop.rename(columns = {"Unnamed: 0" : "num_dep", "Unnamed: 1" : "nom_dep", "Unnamed: 9" : "pop_totale"})
 #On remplace les valeurs manquantes par la médiane
 for col in df_pop.select_dtypes(["int64", "float64"]).columns :
